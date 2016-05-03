@@ -1,0 +1,286 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>geometricbasics &mdash; geometricbasics 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="geometricbasics 1.0.0 documentation" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">geometricbasics 1.0.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for geometricbasics</h1><div class="highlight"><pre>
+<span class="c"># -*- coding: utf-8 -*-</span>
+
+<span class="c">#    PyDCG</span>
+<span class="c">#</span>
+<span class="c">#    A Python library for Discrete and Combinatorial Geometry.</span>
+<span class="c">#</span>
+<span class="c">#    Copyright (C) 2015 Ruy Fabila Monroy</span>
+<span class="c">#</span>
+<span class="c">#    This program is free software; you can redistribute it and/or modify</span>
+<span class="c">#    it under the terms of the GNU General Public License as published by</span>
+<span class="c">#    the Free Software Foundation version 2. </span>
+<span class="c">#</span>
+<span class="c">#    This program is distributed in the hope that it will be useful,</span>
+<span class="c">#    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c">#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c">#    GNU General Public License for more details.</span>
+<span class="c">#</span>
+<span class="c">#    You should have received a copy of the GNU General Public License along</span>
+<span class="c">#    with this program; if not, write to the Free Software Foundation, Inc.,</span>
+<span class="c">#    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.</span>
+
+
+<span class="sd">&quot;&quot;&quot;Implementation of the basic geometric primitives&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">utilities</span>
+
+<span class="n">LEFT</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+<span class="n">COLLINEAR</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">RIGHT</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="k">if</span> <span class="n">utilities</span><span class="o">.</span><span class="n">__load_extensions</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">geometricbasicsCpp</span> <span class="kn">as</span> <span class="nn">gbCpp</span>
+
+
+<div class="viewcode-block" id="turn_py"><a class="viewcode-back" href="../geometricbasics.html#geometricbasics.turn_py">[docs]</a><span class="k">def</span> <span class="nf">turn_py</span><span class="p">(</span><span class="n">p0</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Consider the walk form p0 to p1 to p2. Returns</span>
+<span class="sd">        -1 if it is a turn to the left, 1 if it is to the right</span>
+<span class="sd">        and 0 otherwise&quot;&quot;&quot;</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="p">((</span><span class="n">p2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">p0</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span><span class="n">p1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">p0</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span> <span class="o">-</span> \
+        <span class="p">((</span><span class="n">p1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">p0</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span><span class="n">p2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">p0</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="k">if</span> <span class="n">t</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">RIGHT</span>
+    <span class="k">elif</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">LEFT</span>
+    <span class="k">return</span> <span class="n">COLLINEAR</span>
+    </div>
+<div class="viewcode-block" id="turn"><a class="viewcode-back" href="../geometricbasics.html#geometricbasics.turn">[docs]</a><span class="k">def</span> <span class="nf">turn</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">speedup</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Sorts `points` around `p` in CCW order.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">utilities</span><span class="o">.</span><span class="n">__config</span><span class="p">[</span><span class="s">&#39;PURE_PYTHON&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">speedup</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">turn_py</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">gbCpp</span><span class="o">.</span><span class="n">turn</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">OverflowError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">turn_py</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="isSorted"><a class="viewcode-back" href="../geometricbasics.html#geometricbasics.isSorted">[docs]</a><span class="k">def</span> <span class="nf">isSorted</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">pts</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Checks whether the point set is sorted around p&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pts</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">turn</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">pts</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">pts</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">return</span> <span class="bp">True</span>
+    </div>
+<span class="k">def</span> <span class="nf">sap</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">pts</span><span class="p">,</span> <span class="n">join</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">checkConcave</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">comp</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">q</span> <span class="o">==</span> <span class="n">p</span> <span class="ow">and</span> <span class="n">r</span> <span class="o">!=</span> <span class="n">p</span><span class="p">:</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">if</span> <span class="n">r</span> <span class="o">==</span> <span class="n">p</span> <span class="ow">and</span> <span class="n">q</span> <span class="o">!=</span> <span class="n">p</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">1</span>
+        <span class="n">qxcoord</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">rxcoord</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">xprod</span> <span class="o">=</span> <span class="n">qxcoord</span><span class="o">*</span><span class="n">rxcoord</span>
+        <span class="c">#Special cases:</span>
+        <span class="k">if</span> <span class="n">xprod</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span> <span class="c"># xprod &lt; 0: #One point to the left and one to the right of p, the one to the right goes first</span>
+            <span class="k">return</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">elif</span> <span class="n">xprod</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="c">#At least one point with same x-coordinate than p</span>
+            <span class="n">qycoord</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">rycoord</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="c">#Exactly one point with same x-coordinate than p, and that point is below p. The one below p goes last</span>
+                <span class="k">if</span> <span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                    <span class="k">return</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">qycoord</span><span class="o">*</span><span class="n">rycoord</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span><span class="c">#Two with same x-coordinate than p, one above and one below. The one below p goes last</span>
+                <span class="k">return</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">return</span> <span class="n">turn</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+
+    <span class="n">tpts</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span> <span class="n">comp</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">checkConcave</span><span class="p">:</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tpts</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">turn</span><span class="p">(</span><span class="n">tpts</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">p</span><span class="p">,</span> <span class="n">tpts</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">start</span> <span class="o">=</span> <span class="n">i</span>
+                <span class="k">break</span>
+        <span class="k">if</span> <span class="n">start</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">same</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">while</span> <span class="n">tpts</span><span class="p">[</span><span class="n">same</span><span class="p">]</span> <span class="o">==</span> <span class="n">p</span><span class="p">:</span>
+                <span class="n">same</span><span class="o">+=</span><span class="mi">1</span>
+            <span class="n">start</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">tpts</span> <span class="o">=</span> <span class="n">tpts</span><span class="p">[:</span><span class="n">same</span><span class="p">]</span> <span class="o">+</span> <span class="n">tpts</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">tpts</span><span class="p">)]</span> <span class="o">+</span> <span class="n">tpts</span><span class="p">[</span><span class="n">same</span><span class="p">:</span><span class="n">start</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">tpts</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">tpts</span>
+        
+<div class="viewcode-block" id="sort_around_point_py"><a class="viewcode-back" href="../geometricbasics.html#geometricbasics.sort_around_point_py">[docs]</a><span class="k">def</span> <span class="nf">sort_around_point_py</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">join</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Python version of sort_around_point&quot;&quot;&quot;</span>
+    <span class="c">#print &quot;recieved &quot;, p</span>
+    <span class="n">p1</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">r</span><span class="p">,</span> <span class="n">l</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="n">same</span> <span class="o">=</span> <span class="mi">0</span>
+    
+    <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">points</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">q</span> <span class="o">==</span> <span class="n">p</span><span class="p">:</span>
+            <span class="n">same</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="n">turn</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span> <span class="o">==</span> <span class="n">RIGHT</span><span class="p">:</span>
+            <span class="n">r</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">q</span><span class="p">[:])</span>
+        <span class="k">elif</span> <span class="n">turn</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span> <span class="o">==</span> <span class="n">LEFT</span><span class="p">:</span>
+            <span class="n">l</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">q</span><span class="p">[:])</span>
+        <span class="k">elif</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">l</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">q</span><span class="p">[:])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">r</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">q</span><span class="p">[:])</span>
+
+    <span class="n">l</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="k">lambda</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">:</span> <span class="n">turn</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">))</span>
+    <span class="n">r</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="k">lambda</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">:</span> <span class="n">turn</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">))</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="p">[:]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">same</span><span class="p">)]</span> <span class="o">+</span> <span class="n">r</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">join</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">r</span><span class="p">,</span> <span class="n">l</span>
+
+    <span class="n">r</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
+
+    <span class="n">concave</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">turn</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">p</span><span class="p">,</span> <span class="n">r</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">concave</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">break</span>
+    <span class="k">if</span> <span class="n">concave</span><span class="p">:</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">r</span><span class="p">[:</span><span class="n">same</span><span class="p">]</span> <span class="o">+</span> <span class="n">r</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="p">)]</span> <span class="o">+</span> <span class="n">r</span><span class="p">[</span><span class="n">same</span><span class="p">:</span><span class="n">start</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">r</span>
+</div>
+<div class="viewcode-block" id="sort_around_point"><a class="viewcode-back" href="../geometricbasics.html#geometricbasics.sort_around_point">[docs]</a><span class="k">def</span> <span class="nf">sort_around_point</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">join</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">speedup</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Sorts `points` around `p` in CCW order.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">join</span> <span class="ow">or</span> <span class="n">utilities</span><span class="o">.</span><span class="n">__config</span><span class="p">[</span><span class="s">&#39;PURE_PYTHON&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">speedup</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">sort_around_point_py</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">join</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">gbCpp</span><span class="o">.</span><span class="n">sort_around_point</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">points</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">OverflowError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">sort_around_point_py</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">join</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="iterate_over_points"><a class="viewcode-back" href="../geometricbasics.html#geometricbasics.iterate_over_points">[docs]</a><span class="k">def</span> <span class="nf">iterate_over_points</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Takes a function and a point set as a parameter.</span>
+<span class="sd">       It applies f(p,pts-p) for every point p in pts&quot;&quot;&quot;</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[:]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">pts</span><span class="p">[</span><span class="mi">1</span><span class="p">:]]</span>
+    <span class="n">newVal</span> <span class="o">=</span> <span class="n">pts</span><span class="p">[</span><span class="mi">0</span><span class="p">][:]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tmp</span><span class="p">)):</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">newVal</span><span class="p">,</span> <span class="n">tmp</span><span class="p">))</span>
+        <span class="n">newVal</span><span class="p">,</span> <span class="n">tmp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="n">i</span><span class="p">][:],</span> <span class="n">newVal</span><span class="p">[:]</span>        
+    <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">newVal</span><span class="p">,</span> <span class="n">tmp</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">res</span>
+
+</div>
+<div class="viewcode-block" id="general_position"><a class="viewcode-back" href="../geometricbasics.html#geometricbasics.general_position">[docs]</a><span class="k">def</span> <span class="nf">general_position</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Tests whether the point set is in general position or not.</span>
+<span class="sd">       If report is set to True it return all triples of points not in general position&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">pts</span><span class="p">):</span>
+        <span class="n">triples</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">tmp_pts</span> <span class="o">=</span> <span class="n">sort_around_point</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">pts</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tmp_pts</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">turn</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">tmp_pts</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">tmp_pts</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="o">==</span> <span class="n">COLLINEAR</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">report</span><span class="p">:</span>
+                    <span class="n">triples</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">p</span><span class="p">,</span> <span class="n">tmp_pts</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">tmp_pts</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">if</span> <span class="n">report</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">triples</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">True</span>
+
+    <span class="n">res</span> <span class="o">=</span> <span class="n">iterate_over_points</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">report</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">res</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">x</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">return</span> <span class="bp">True</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">geometricbasics 1.0.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2016, PyDCG.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
