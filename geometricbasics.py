@@ -30,6 +30,10 @@ RIGHT = 1
 
 if utilities.__load_extensions:
     import geometricbasicsCpp as gbCpp
+    
+def newfunction():
+    """new dosctring"""
+    pass
 
 
 def turn_py(p0, p1, p2):
